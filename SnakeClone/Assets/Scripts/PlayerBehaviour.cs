@@ -10,14 +10,15 @@ public class PlayerBehaviour : MonoBehaviour
     private Vector2 desiredPosition;
     public float moveFrequency;
     private float counter;
-    void Start()
+
+    protected virtual void Start()
     {
         desiredPosition = transform.position;
     }
 
-    void Update()
+    protected void SwitchDirection()
     {
-        if(counter >= moveFrequency)
+        if (counter >= moveFrequency)
         {
             counter = 0;
 
@@ -35,8 +36,10 @@ public class PlayerBehaviour : MonoBehaviour
                 case Direction.RIGHT:
                     desiredPosition += Vector2.right;
                     break;
+                default:
+                    desiredPosition += Vector2.right;
+                    break;
             }
-
             MoveTo(desiredPosition);
         }
         else
