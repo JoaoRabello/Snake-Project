@@ -12,12 +12,14 @@ public class PlayerBehaviour : MonoBehaviour
     private float counter;
 
     public List<GameObject> body;
+    public GameObject newBody;
     int bodySize = 2;
     public List<Vector2> path;
 
     protected virtual void Start()
     {
         desiredPosition = transform.position;
+        path.Add(body[2].transform.position);
         path.Add(body[1].transform.position);
         path.Add(transform.position);
     }
@@ -72,8 +74,11 @@ public class PlayerBehaviour : MonoBehaviour
 
     protected void GrowBody()
     {
-        GameObject newBody = Instantiate(body[1], path[1], Quaternion.identity);
+        path.Add(transform.position);
+        newBody = Instantiate(newBody, path[bodySize], Quaternion.identity);
         body.Add(newBody);
+        //body[bodySize].transform.localScale *= 0.9f;
+        bodySize++;
     }
 
     private void OnTriggerEnter2D(Collider2D c)
@@ -81,6 +86,7 @@ public class PlayerBehaviour : MonoBehaviour
         if (c.CompareTag("Fruit"))
         {
             GrowBody();
+            moveFrequency *= 0.95f;
             Destroy(c.gameObject);
         }
     }
