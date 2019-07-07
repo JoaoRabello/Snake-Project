@@ -201,7 +201,7 @@ PrefabInstance:
       objectReference: {fileID: 815499707}
     - target: {fileID: 1762543526, guid: 52dbafedc40b616418c0680543607213, type: 3}
       propertyPath: moveFrequency
-      value: 0.3
+      value: 0.25
       objectReference: {fileID: 0}
     - target: {fileID: 1762543526, guid: 52dbafedc40b616418c0680543607213, type: 3}
       propertyPath: test
@@ -426,11 +426,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 87ff6af398414954f840087377409d15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  whiteGround: {fileID: 4658380998961682305, guid: 985a1acfa0934134293bb2645706e64b,
+  lightGround: {fileID: 4658380998961682305, guid: 985a1acfa0934134293bb2645706e64b,
     type: 3}
-  blackGround: {fileID: 7581640307440557477, guid: 94d7a27af21e86e4da9bb692b9989aca,
+  darkGround: {fileID: 7581640307440557477, guid: 94d7a27af21e86e4da9bb692b9989aca,
     type: 3}
-  ground: []
+  grounds: []
+  walls: []
+  wall: {fileID: 4658380998961682305, guid: e62fcce9eba4f3e4d9ab68e764307409, type: 3}
   linhas: 20
   colunas: 36
   fruit: {fileID: 4658380998961682305, guid: a3ec860c00b8ad34da8491393d71485b, type: 3}

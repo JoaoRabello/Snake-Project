@@ -9,7 +9,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     private Vector2 desiredPosition;
     public float moveFrequency;
-    private float counter;
+    protected float counter;
 
     public List<GameObject> body;
     public GameObject newBody;
@@ -91,7 +91,7 @@ public class PlayerBehaviour : MonoBehaviour
             Destroy(c.gameObject);
         }
 
-        if (c.CompareTag("Body"))
+        if (c.CompareTag("Body") || c.CompareTag("Wall"))
         {
             for (int i = 0; i < body.Count; i++)
             {

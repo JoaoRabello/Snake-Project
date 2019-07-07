@@ -7,15 +7,16 @@ public class GameManager : MonoBehaviour
     public enum GameState { START, PLAYING, EATING, DEAD }
     public static GameState gameState = GameState.START;
 
-    public GameObject whiteGround;
-    public GameObject blackGround;
+    public GameObject lightGround;
+    public GameObject darkGround;
 
     [HideInInspector]
     public List<Vector2> grounds;
+    [HideInInspector]
     public List<Vector2> walls;
     public GameObject wall;
-    public int linhas = 2;
-    public int colunas = 2;
+    public int linhas;
+    public int colunas;
 
     public GameObject fruit;
 
@@ -60,12 +61,12 @@ public class GameManager : MonoBehaviour
 
                 if (white)
                 {
-                    Instantiate(whiteGround, pos, Quaternion.identity);
+                    Instantiate(lightGround, pos, Quaternion.identity);
                     white = false;
                 }
                 else
                 {
-                    Instantiate(blackGround, pos, Quaternion.identity);
+                    Instantiate(darkGround, pos, Quaternion.identity);
                     white = true;
                 }
                 pos.x += 1;
