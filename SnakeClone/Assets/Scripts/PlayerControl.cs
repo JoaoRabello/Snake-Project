@@ -10,25 +10,25 @@ public class PlayerControl : PlayerBehaviour
         float inputX = Input.GetAxisRaw("Horizontal");
         float inputY = Input.GetAxisRaw("Vertical");
 
-        if (inputY > 0)
+        if (inputY > 0 && op != Direction.DOWN)
         {
             op = Direction.UP;
         }
         else
         {
-            if (inputY < 0)
+            if (inputY < 0 && op != Direction.UP)
             {
                 op = Direction.DOWN;
             }
             else
             {
-                if (inputX < 0)
+                if (inputX < 0 && op != Direction.RIGHT)
                 {
                     op = Direction.LEFT;
                 }
                 else
                 {
-                    if (inputX > 0)
+                    if (inputX > 0 && op != Direction.LEFT)
                     {
                         op = Direction.RIGHT;
                     }

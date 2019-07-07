@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 1762543526}
   - component: {fileID: 1762543529}
   - component: {fileID: 2606990921263891419}
-  m_Layer: 0
-  m_Name: Snake
+  m_Layer: 9
+  m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -98,6 +98,7 @@ MonoBehaviour:
   body:
   - {fileID: 4658380998961682305}
   - {fileID: 0}
+  newBody: {fileID: 0}
   path: []
 --- !u!50 &1762543529
 Rigidbody2D:

@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     protected enum Direction { RIGHT, LEFT, UP, DOWN };
-    protected Direction op;
+    protected Direction op = Direction.RIGHT;
 
     private Vector2 desiredPosition;
     public float moveFrequency;
@@ -13,6 +13,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public List<GameObject> body;
     public GameObject newBody;
+    private bool growing = false;
     int bodySize = 2;
     public List<Vector2> path;
 
@@ -74,10 +75,9 @@ public class PlayerBehaviour : MonoBehaviour
 
     protected void GrowBody()
     {
-        path.Add(transform.position);
-        newBody = Instantiate(newBody, path[bodySize], Quaternion.identity);
+        path.Add(desiredPosition);
+        newBody = Instantiate(newBody, path[1], Quaternion.identity);
         body.Add(newBody);
-        //body[bodySize].transform.localScale *= 0.9f;
         bodySize++;
     }
 
@@ -85,9 +85,19 @@ public class PlayerBehaviour : MonoBehaviour
     {
         if (c.CompareTag("Fruit"))
         {
+            GameManager.gameState = GameManager.GameState.EATING;
             GrowBody();
             moveFrequency *= 0.95f;
             Destroy(c.gameObject);
+        }
+
+        if (c.CompareTag("Body"))
+        {
+            for (int i = 0; i < body.Count; i++)
+            {
+                body[i].GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
+            }
+            enabled = false;
         }
     }
 }
