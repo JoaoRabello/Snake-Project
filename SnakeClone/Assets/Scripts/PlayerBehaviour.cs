@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
@@ -16,6 +15,9 @@ public class PlayerBehaviour : MonoBehaviour
     int bodySize = 2;
     public List<Vector2> path;
 
+    [SerializeField]
+    private AudioClip eatSFX;
+    public AudioSource audioSource;
     protected virtual void Start()
     {
         desiredPosition = transform.position;
@@ -34,18 +36,23 @@ public class PlayerBehaviour : MonoBehaviour
             {
                 case Direction.UP:
                     desiredPosition += Vector2.up;
+                    RotateSprite(body[0], "Up");
                     break;
                 case Direction.DOWN:
                     desiredPosition += Vector2.down;
+                    RotateSprite(body[0], "Down");
                     break;
                 case Direction.LEFT:
                     desiredPosition += Vector2.left;
+                    RotateSprite(body[0], "Left");
                     break;
                 case Direction.RIGHT:
                     desiredPosition += Vector2.right;
+                    RotateSprite(body[0], "Right");
                     break;
                 default:
                     desiredPosition += Vector2.up;
+                    RotateSprite(body[0], "Up");
                     break;
             }
             MoveTo(desiredPosition);
@@ -68,7 +75,51 @@ public class PlayerBehaviour : MonoBehaviour
     {
         for(int i = 1; i < body.Count; i++)
         {
+            if(body[i].transform.position.x - path[i].x < 0)
+            {
+                RotateSprite(body[i], "Right");
+            }
+            else
+            {
+                if(body[i].transform.position.x - path[i].x > 0)
+                {
+                    RotateSprite(body[i], "Left");
+                }
+                else
+                {
+                    if (body[i].transform.position.y - path[i].y < 0)
+                    {
+                        RotateSprite(body[i], "Up");
+                    }
+                    else
+                    {
+                        if (body[i].transform.position.y - path[i].y < 0)
+                        {
+                            RotateSprite(body[i], "Down");
+                        }
+                    }
+                }
+            }
             body[i].transform.position = path[i];
+        }
+    }
+
+    protected void RotateSprite(GameObject spt, string dir)
+    {
+        switch (dir)
+        {
+            case "Up":
+                spt.transform.rotation = Quaternion.Euler(0f, 0f, 90f);
+                break;
+            case "Down":
+                spt.transform.rotation = Quaternion.Euler(0f, 0f, 270f);
+                break;
+            case "Left":
+                spt.transform.rotation = Quaternion.Euler(0f, 0f, 180f);
+                break;
+            case "Right":
+                spt.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+                break;
         }
     }
 
@@ -82,11 +133,22 @@ public class PlayerBehaviour : MonoBehaviour
 
     private void EatFruit(GameObject fruit)
     {
+        audioSource.PlayOneShot(eatSFX, 0.7F);
         GameManager.gameState = GameManager.GameState.EATING;
         GameManager.fruitCounter++;
         GrowBody();
         moveFrequency *= 0.95f;
         Destroy(fruit);
+    }
+
+    private void Die()
+    {
+        for (int i = 0; i < body.Count; i++)
+        {
+            body[i].GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
+        }
+        enabled = false;
+        GameManager.gameState = GameManager.GameState.DEAD;
     }
 
     private void OnTriggerEnter2D(Collider2D c)
@@ -98,11 +160,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         if (c.CompareTag("Body") || c.CompareTag("Wall"))
         {
-            for (int i = 0; i < body.Count; i++)
-            {
-                body[i].GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
-            }
-            enabled = false;
+            Die();
         }
     }
 }

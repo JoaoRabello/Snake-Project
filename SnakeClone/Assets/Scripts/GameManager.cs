@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     public enum GameState { START, PLAYING, EATING, DEAD }
-    public static GameState gameState = GameState.START;
+    public static GameState gameState;
 
     public GameObject groundOne;
     public GameObject groundTwo;
@@ -29,18 +29,30 @@ public class GameManager : MonoBehaviour
     public GameObject snakeBody;
     public GameObject snakeTail;
 
+    [SerializeField]
+    private GameObject gameOverPanel;
+
     void Awake()
     {
+        fruitCounter = 0;
         CreateWorld();
         SpawnSnakeRandomly();
+        gameState = GameState.START;
     }
-    
+
 
     void Update()
     {
         if(gameState == GameState.EATING || gameState == GameState.START)
         {
             SpawnFruit();
+        }
+        else
+        {
+            if(gameState == GameState.DEAD)
+            {
+                gameOverPanel.SetActive(true);
+            }
         }
 
         scoreText.text = fruitCounter.ToString();
