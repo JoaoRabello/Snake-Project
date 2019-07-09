@@ -149,7 +149,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.589
+  m_Volume: 0.498
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -470,11 +470,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Head
       objectReference: {fileID: 0}
-    - target: {fileID: 4658380998961682305, guid: 52dbafedc40b616418c0680543607213,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4658380998961682304, guid: 52dbafedc40b616418c0680543607213,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -539,13 +534,13 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 311613956}
     - target: {fileID: 1762543526, guid: 52dbafedc40b616418c0680543607213, type: 3}
-      propertyPath: audioSource
+      propertyPath: sFXSource
       value: 
       objectReference: {fileID: 7901606}
     - target: {fileID: 1762543526, guid: 52dbafedc40b616418c0680543607213, type: 3}
-      propertyPath: eatSFX
+      propertyPath: musicSource
       value: 
-      objectReference: {fileID: 8300000, guid: 87bc71585b7f7cc45988af3158baa781, type: 3}
+      objectReference: {fileID: 1356741904}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52dbafedc40b616418c0680543607213, type: 3}
 --- !u!1 &311613956 stripped
@@ -1027,6 +1022,7 @@ MonoBehaviour:
   snakeBody: {fileID: 311613956}
   snakeTail: {fileID: 815499707}
   gameOverPanel: {fileID: 541695908}
+  gameOverScoreText: {fileID: 1208919280}
 --- !u!114 &909953770
 MonoBehaviour:
   m_ObjectHideFlags: 0

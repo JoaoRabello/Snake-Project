@@ -6,18 +6,25 @@ public class PlayerBehaviour : MonoBehaviour
     protected enum Direction { RIGHT, LEFT, UP, DOWN };
     protected Direction op = Direction.RIGHT;
 
+    #region Movimento
     private Vector2 desiredPosition;
     public float moveFrequency;
     protected float counter;
+    #endregion
 
+    #region Corpo
     public List<GameObject> body;
     public GameObject newBody;
-    int bodySize = 2;
     public List<Vector2> path;
+    #endregion
 
-    [SerializeField]
-    private AudioClip eatSFX;
-    public AudioSource audioSource;
+    #region Sounds & Music
+    public AudioClip eatSFX;
+    public AudioClip gameOverSFX;
+    public AudioSource sFXSource;
+    public AudioSource musicSource;
+    #endregion
+
     protected virtual void Start()
     {
         desiredPosition = transform.position;
@@ -26,6 +33,10 @@ public class PlayerBehaviour : MonoBehaviour
         path.Add(transform.position);
     }
 
+    #region Métodos de Movimento
+    /// <summary>
+    /// Modifica a posição desejada (desiredPosition) dependendo da direção obtida em PlayerControl e chama MoveTo(), passando esta posição.
+    /// </summary>
     protected void SwitchDirection()
     {
         if (counter >= moveFrequency)
@@ -63,6 +74,10 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Muda a posição da cabeça da cobra para a posição desejada e adiciona a posição à lista path.
+    /// </summary>
+    /// <param desPos="desiredPosition"></param>
     void MoveTo(Vector2 desiredPosition)
     {
         transform.position = desiredPosition;
@@ -71,6 +86,9 @@ public class PlayerBehaviour : MonoBehaviour
         path.Remove(path[0]);
     }
 
+    /// <summary>
+    /// Cada pedaço do corpo da cobra, exceto a cabeça, é levado a próxima posição na lista path.
+    /// </summary>
     private void MoveBody()
     {
         for(int i = 1; i < body.Count; i++)
@@ -104,6 +122,11 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Rotaciona o objeto passado para um dos 4 sentidos (Up, Down, Left, Right).
+    /// </summary>
+    /// <param sprite="spt"></param>
+    /// <param direction="dir"></param>
     protected void RotateSprite(GameObject spt, string dir)
     {
         switch (dir)
@@ -122,33 +145,50 @@ public class PlayerBehaviour : MonoBehaviour
                 break;
         }
     }
+    #endregion
 
+    #region Métodos de Pontuação
+    /// <summary>
+    /// Instancia um corpo na posição da fruta devorada e o adiciona a lista body.
+    /// </summary>
     protected void GrowBody()
     {
         path.Add(desiredPosition);
         newBody = Instantiate(newBody, path[1], Quaternion.identity);
         body.Add(newBody);
-        bodySize++;
     }
 
+    /// <summary>
+    /// Toca o SFX de comer, muda para o estado EATING do GameManager, cresce o corpo da cobra e aumenta sua velocidade. Por fim, destrói a fruta passada como parâmetro.
+    /// </summary>
+    /// <param fruit="fruit"></param>
     private void EatFruit(GameObject fruit)
     {
-        audioSource.PlayOneShot(eatSFX, 0.7F);
+        sFXSource.PlayOneShot(eatSFX, 0.7F);
         GameManager.gameState = GameManager.GameState.EATING;
         GameManager.fruitCounter++;
         GrowBody();
         moveFrequency *= 0.95f;
         Destroy(fruit);
     }
+    #endregion
 
+    /// <summary>
+    /// Muda o corpo da cobra para vermelho e toca o som de game over, indicando a derrota. Altera, também, o GameManager para o estado DEAD.
+    /// </summary>
     private void Die()
     {
         for (int i = 0; i < body.Count; i++)
         {
             body[i].GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
         }
-        enabled = false;
+        musicSource.Stop();
+        musicSource.clip = gameOverSFX;
+        musicSource.loop = false;
+        musicSource.Play();
         GameManager.gameState = GameManager.GameState.DEAD;
+        enabled = false;
+        
     }
 
     private void OnTriggerEnter2D(Collider2D c)

@@ -101,6 +101,10 @@ MonoBehaviour:
   - {fileID: 0}
   newBody: {fileID: 4658380998961682305, guid: 1bace9247c7c87344b6b78ec88914f5a, type: 3}
   path: []
+  eatSFX: {fileID: 8300000, guid: 87bc71585b7f7cc45988af3158baa781, type: 3}
+  gameOverSFX: {fileID: 8300000, guid: b36e98c9cc393ff4cab0bdb3dd59d4b1, type: 3}
+  sFXSource: {fileID: 0}
+  musicSource: {fileID: 0}
 --- !u!50 &1762543529
 Rigidbody2D:
   serializedVersion: 4
