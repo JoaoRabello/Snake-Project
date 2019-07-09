@@ -1,29 +1,40 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public enum GameState { START, PLAYING, EATING, DEAD }
     public static GameState gameState = GameState.START;
 
-    public GameObject lightGround;
-    public GameObject darkGround;
+    public GameObject groundOne;
+    public GameObject groundTwo;
 
     [HideInInspector]
     public List<Vector2> grounds;
     [HideInInspector]
     public List<Vector2> walls;
     public GameObject wall;
-    public int linhas;
-    public int colunas;
+    public GameObject borderWall;
+    public int height;
+    public int width;
 
     public GameObject fruit;
+    public static int fruitCounter;
+    public Text scoreText;
+
+    private PlayerBehaviour player;
+    public GameObject snakeHead;
+    public GameObject snakeBody;
+    public GameObject snakeTail;
 
     void Awake()
     {
         CreateWorld();
+        SpawnSnakeRandomly();
     }
+    
 
     void Update()
     {
@@ -31,47 +42,131 @@ public class GameManager : MonoBehaviour
         {
             SpawnFruit();
         }
+
+        scoreText.text = fruitCounter.ToString();
     }
 
     void SpawnFruit()
     {
         int randomIndex = Random.Range(0, grounds.Count);
+        bool canSpawn = false;
+        while (!canSpawn)
+        {
+            foreach (Vector2 pos in player.path)
+            {
+                if (grounds[randomIndex] == pos)
+                {
+                    randomIndex = Random.Range(0, grounds.Count);
+                }
+                else
+                {
+                    canSpawn = true;
+                }
+            }
+        }
         Instantiate(fruit, grounds[randomIndex], Quaternion.identity);
         gameState = GameState.PLAYING;
     }
     
     void CreateWorld()
     {
-        bool white = true;
         Vector2 pos = transform.position;
-        for (int y = 0; y < linhas; y++)
+        int randomGround;
+        for (int y = 0; y < height; y++)
         {
             pos.x = transform.position.x;
-            for (int x = 0; x < colunas; x++)
+            for (int x = 0; x < width; x++)
             {
-                if((y == 0 || y == linhas - 1)|| (x == 0 || x == colunas - 1))
+                if(y == 0)
                 {
-                    walls.Add(pos);
-                    Instantiate(wall, pos, Quaternion.identity);
+                    if(x == 0)
+                    {
+                        walls.Add(pos);
+                        Instantiate(borderWall, pos, Quaternion.Euler(0f, 0f, 270f));  // bord esquerda superior
+                    }
+                    else
+                    {
+                        if (x == width - 1)
+                        {
+                            walls.Add(pos);
+                            Instantiate(borderWall, pos, Quaternion.Euler(0f, 0f, 180f));  // bord direita superior
+                        }
+                        else
+                        {
+                            walls.Add(pos);
+                            Instantiate(wall, pos, Quaternion.Euler(0f,0f,180f));
+                        }
+                    }
                 }
                 else
                 {
-                    grounds.Add(pos);
+                    if(y != height - 1)
+                    {
+                        if(x == 0)
+                        {
+                            walls.Add(pos);
+                            Instantiate(wall, pos, Quaternion.Euler(0f, 0f, 270f));  //right wall
+                        }
+                        else
+                        {
+                            if(x == width - 1)
+                            {
+                                walls.Add(pos);
+                                Instantiate(wall, pos, Quaternion.Euler(0f, 0f, 90f));  //left wall
+                            }
+                            else
+                            {
+                                grounds.Add(pos);
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(y == height - 1)
+                        {
+                            if (x == 0)
+                            {
+                                walls.Add(pos);
+                                Instantiate(borderWall, pos, Quaternion.identity);  // bord esquerda inferior
+                            }
+                            else
+                            {
+                                if (x == width - 1)
+                                {
+                                    walls.Add(pos);
+                                    Instantiate(borderWall, pos, Quaternion.Euler(0f, 0f, 90f));  // bord esquerda inferior
+                                }
+                                else
+                                {
+                                    walls.Add(pos);
+                                    Instantiate(wall, pos, Quaternion.identity);
+                                }
+                            }
+                        }
+                    }
                 }
 
-                if (white)
+                randomGround = Random.Range(1, 10);
+                if (randomGround <= 5)
                 {
-                    Instantiate(lightGround, pos, Quaternion.identity);
-                    white = false;
+                    Instantiate(groundOne, pos, Quaternion.identity);
                 }
                 else
                 {
-                    Instantiate(darkGround, pos, Quaternion.identity);
-                    white = true;
+                    Instantiate(groundTwo, pos, Quaternion.identity);
                 }
                 pos.x += 1;
             }
             pos.y -= 1;
         }
+    }
+
+    void SpawnSnakeRandomly()
+    {
+        int randomPos = Random.Range(0, grounds.Count);
+        snakeHead.transform.position = grounds[randomPos];
+        snakeBody.transform.position = new Vector2(snakeHead.transform.position.x - 1, snakeHead.transform.position.y);
+        snakeTail.transform.position = new Vector2(snakeBody.transform.position.x - 1, snakeBody.transform.position.y);
+        player = snakeHead.GetComponent<PlayerBehaviour>();
     }
 }

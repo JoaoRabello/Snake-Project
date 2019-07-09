@@ -13,15 +13,14 @@ public class PlayerBehaviour : MonoBehaviour
 
     public List<GameObject> body;
     public GameObject newBody;
-    private bool growing = false;
     int bodySize = 2;
     public List<Vector2> path;
 
     protected virtual void Start()
     {
         desiredPosition = transform.position;
-        path.Add(body[2].transform.position);
         path.Add(body[1].transform.position);
+        path.Add(body[2].transform.position);
         path.Add(transform.position);
     }
 
@@ -81,14 +80,20 @@ public class PlayerBehaviour : MonoBehaviour
         bodySize++;
     }
 
+    private void EatFruit(GameObject fruit)
+    {
+        GameManager.gameState = GameManager.GameState.EATING;
+        GameManager.fruitCounter++;
+        GrowBody();
+        moveFrequency *= 0.95f;
+        Destroy(fruit);
+    }
+
     private void OnTriggerEnter2D(Collider2D c)
     {
         if (c.CompareTag("Fruit"))
         {
-            GameManager.gameState = GameManager.GameState.EATING;
-            GrowBody();
-            moveFrequency *= 0.95f;
-            Destroy(c.gameObject);
+            EatFruit(c.gameObject);
         }
 
         if (c.CompareTag("Body") || c.CompareTag("Wall"))
