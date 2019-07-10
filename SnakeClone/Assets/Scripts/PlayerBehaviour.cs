@@ -16,6 +16,7 @@ public class PlayerBehaviour : MonoBehaviour
     public List<GameObject> body;
     public GameObject newBody;
     public List<Vector2> path;
+    public int bodysize = 3;
     #endregion
 
     #region Sounds & Music
@@ -155,6 +156,7 @@ public class PlayerBehaviour : MonoBehaviour
     {
         path.Add(desiredPosition);
         newBody = Instantiate(newBody, path[1], Quaternion.identity);
+        bodysize++;
         body.Add(newBody);
     }
 

@@ -73,30 +73,35 @@ public class GameManager : MonoBehaviour
     /// </summary>
     void SpawnFruit()
     {
-        int randomIndex = Random.Range(0, grounds.Count);
-        Instantiate(fruit, grounds[FreeSpawnPoint(randomIndex)], Quaternion.identity);
+        Instantiate(fruit, FreeSpawnPoint(), Quaternion.identity);
         gameState = GameState.PLAYING;
     }
 
     /// <summary>
     /// Verifica se a posição escolhida é dentro do corpo da cobra. Se sim, randomiza novamente e encontra outra posição.
     /// </summary>
-    /// <param RandomIndex="index"></param>
-    /// <returns></returns>
-    int FreeSpawnPoint(int index)
+    Vector2 FreeSpawnPoint()
     {
+        Vector2 pos;
+        int randomIndex = Random.Range(0, grounds.Count);
         while (true)
         {
-            foreach (Vector2 pos in player.path)
+            int bodycount = 0;
+            foreach (GameObject body in player.body)
             {
-                if (grounds[index] == pos)
+                pos = body.transform.position;
+                if (!grounds[randomIndex].Equals(pos))
                 {
-                    index = Random.Range(0, grounds.Count);
+                    bodycount++;
                 }
-                else
-                {
-                    return index;
-                }
+            }
+            if (bodycount == player.bodysize)
+            {
+                return grounds[randomIndex];
+            }
+            else
+            {
+                randomIndex = Random.Range(0, grounds.Count);
             }
         }
     }
